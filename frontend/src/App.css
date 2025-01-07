@@ -1,0 +1,176 @@
+.animationContainer{
+  background-color: rgb(0, 0, 0);
+  position: absolute;
+  left:34vw;
+  top: 10vh;
+  height: 50vh;
+
+}
+.jarvis-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 40vh;
+  width: 30vw;
+ z-index: 3;
+position: relative;
+top: 6vh;
+  
+  /* background-color: #f40404; Dark background for contrast */
+}
+
+.jarvis-circle {
+  width: 200px;
+  height: 200px;
+  border: 5px solid rgba(0, 123, 255, 0.5); /* Semi-transparent blue outline */
+  border-radius: 50%;
+  position: relative;
+  animation: rotate 5s linear infinite;
+  box-shadow: 0 0 20px rgba(0, 123, 255, 0.8);
+}
+
+.inner-glow {
+  width: 150px;
+  height: 150px;
+  background: radial-gradient(circle, rgba(0, 123, 255, 0.4), rgba(0, 123, 255, 0));
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: pulse 2s infinite ease-in-out;
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.2);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+}
+
+
+
+/* Full-screen container */
+.wavy-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50vh;
+  width: 25vw;
+  z-index: 1;
+  /* background-color: #36bc11; Black background for contrast */
+  overflow: hidden;
+   
+  position: relative;
+  bottom: 44vh;
+
+}
+
+/* Wavy Circle SVG */
+.wavy-circle {
+  width: 300px;
+  height: 300px;
+  position: relative;
+}
+
+.wavy-circle path {
+  fill: none;
+  /* stroke: rgba(0, 255, 255, 0.8); Glowing blue color */
+  stroke:rgba(0, 123, 255, 0.8) ;
+  stroke-width: 2;
+  stroke-linejoin:miter;
+  
+  
+  filter: drop-shadow(0 0 10px rgba(0, 255, 255, 0.8));
+  animation: animateWave 4s infinite ease-in-out;
+}
+
+/* Keyframes for wave animation */
+@keyframes animateWave {
+  0% {
+    d: path("M 50,100 Q 75,50 100,100 T 150,100 T 200,100");
+    
+  }
+  25% {
+    d: path("M 50,100 Q 75,75 100,50 T 150,150 T 200,100");
+  }
+  50% {
+    d: path("M 50,100 Q 75,150 100,100 T 150,50 T 200,100");
+  }
+  75% {
+    d: path("M 50,100 Q 75,75 100,150 T 150,75 T 200,100");
+  }
+  100% {
+    d: path("M 50,100 Q 75,50 100,100 T 150,100 T 200,100");
+  }
+}
+
+
+.main{
+  color: #ffffff;
+}
+
+.in{
+  background-color: rgb(39, 39, 39);
+  color: white;
+  padding: 20px;
+  border-radius: 13px;
+}
+
+.heading{
+  font-family:'Courier New', Courier, monospace;
+  font-size: 23px;
+  text-align: center;
+}
+
+
+
+.btn1,.btn2{
+  padding: 10px;
+  border-radius: 8px;
+  outline: none;
+  border: none;
+  display: block;
+  font-family: 'Verdana';
+  font-size: 19px;
+  position: relative;
+  top: 60vh;
+  left:44vw
+}
+
+.btn1{
+  background-color: rgba(0, 123, 255, 0.8) ;
+  color: white;
+  border: 2px solid white;;
+
+}
+
+.btn2{
+  background-color: rgb(247, 5, 5) ;
+  color: rgba(255, 255, 255, 0.8) ;
+  border: 2px solid rgba(255, 255, 255, 0.8) ;;
+  margin-top: 10px;
+}
+
+.btn1:hover,.btn2:hover{
+  cursor: pointer;
+  
+
+}
