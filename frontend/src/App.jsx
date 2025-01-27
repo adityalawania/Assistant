@@ -3,29 +3,22 @@ import Animation from "./Components/Animation";
 import { React, useEffect, useRef, useState } from "react";
 import io from "socket.io-client";
 
-const socket = io.connect("http://localhost:8000");
+const socket = io.connect(`${process.env.BASE_URL}`);
 
 const App = () => {
-  const [response, setResponse] = useState([]);
-  const [reRender, SetreRender] = useState(0);
-  const [command, setCommand] = useState("");
+ 
   const recognitionRef = useRef(null);
   
-  useEffect(() => {
-    setResponse([]);
-  }, []);
 
   useEffect(() => {
     initializeRecognition();
   }, []);
 
-  useEffect(()=>{
-   console.log(response)
-  },[response])
 
   const initializeRecognition = () => {
     if (!("SpeechRecognition" in window || "webkitSpeechRecognition" in window)) {
       console.error("SpeechRecognition API not supported in this browser.");
+      alert("SpeechRecognition API not supported in this browser.")
       return;
     }
 
@@ -76,7 +69,7 @@ const App = () => {
   const handleFetch = async (command) => {
     console.log("Fetching command:", command);
     try {
-      const res = await fetch("http://localhost:8000/run", {
+      const res = await fetch(`${process.env.BASE_URL}/run`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -95,6 +88,8 @@ const App = () => {
       <p className="heading">Try Saying... "Hello Ruby" or "Play Karan Aujla"</p>
       <button className="btn1" onClick={startListening}>Start Listening</button>
       <button className="btn2" onClick={stopListening}>Stop Listening</button>
+      <p className="heading2">Say "Stop it" to stop Ruby</p>
+
       <Animation />
     </div>
   );

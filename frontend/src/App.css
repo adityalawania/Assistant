@@ -38,7 +38,7 @@ top: 6vh;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  animation: pulse 2s infinite ease-in-out;
+  /* animation: pulse 2s infinite ease-in-out; */
 }
 
 @keyframes rotate {
@@ -96,7 +96,8 @@ top: 6vh;
   stroke:rgba(0, 123, 255, 0.8) ;
   stroke-width: 2;
   stroke-linejoin:miter;
-  
+  position: relative;
+  top:100px;
   
   filter: drop-shadow(0 0 10px rgba(0, 255, 255, 0.8));
   animation: animateWave 4s infinite ease-in-out;
@@ -140,6 +141,14 @@ top: 6vh;
   text-align: center;
 }
 
+.heading2{
+  font-family:'Courier New', Courier, monospace;
+  font-size: 23px;
+  position: absolute;
+  top: 80vh;
+  left: 37.7vw;
+  
+}
 
 
 .btn1,.btn2{
@@ -151,7 +160,7 @@ top: 6vh;
   font-family: 'Verdana';
   font-size: 19px;
   position: relative;
-  top: 60vh;
+  top: 53vh;
   left:44vw
 }
 

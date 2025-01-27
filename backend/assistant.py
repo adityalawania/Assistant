@@ -7,7 +7,6 @@ import re
 import io
 import sys  # For fetching command-line arguments
 
-sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 
 # Initialize recognizer and speaker
 listener = sr.Recognizer()
@@ -24,13 +23,21 @@ def talk(text):
 def run_alexa(command):
     if command:  # Check if the command is not None
         command = command.lower()  # Convert to lowercase
-
+        print(command)
         # Handle greetings
-        if 'ruby' in command or 'rubi' in command:
-            if any(greeting in command for greeting in ['hello', 'hi', 'hey', 'wake up']):
+        if 'rubi' in command or 'ruby' in command:
+            if any(greeting in command for greeting in ['hello', 'hi', 'hey', 'wake up','hy','hye','hii','hay','heya' ,'good morning','good evening','good night','good afternoon']):
                 response = "Hello sir, what can I do for you?"
                 talk(response)
                 return response
+            else:
+                list=command.split(' ')
+                command=''
+                for i in list :
+                    if(i=='ruby' or i=='rubi'):
+                        anything='ok'
+                    else:
+                        command=command+i+' '
 
         # Handle stop/exit
         if 'stop' in command or 'exit' in command:
@@ -57,7 +64,9 @@ def run_alexa(command):
 
         # Handle Wikipedia search
         try:
+            print('searching on web... '+command)
             response = wikipedia.summary(command, 1)
+       
         except:
             response = f"Sorry, I couldn't find anything for {command}."
         

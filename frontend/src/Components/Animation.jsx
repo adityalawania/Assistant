@@ -3,13 +3,12 @@ import '../App.css'
 import Circle from './Circle'
 import Swing from './Swing'
 
-function Animation() {
-
+function Animation(props) {
+  
   return (
     <div className='animationContainer'>
-    
-      <Circle/>
-      <Swing/>
+     <Circle/>
+     <Swing/>
     </div>
   )
 }
