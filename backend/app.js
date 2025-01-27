@@ -23,8 +23,8 @@ app.use(express.json())
 express.urlencoded({extended:false})
 
 app.get('/', (req, res) => {
-    console.log("ok");
-    res.send("done");
+  
+    res.json({"Message":"Hello from Backend"});
 });
 
 
