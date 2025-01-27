@@ -3,22 +3,28 @@ import Animation from "./Components/Animation";
 import { React, useEffect, useRef, useState } from "react";
 import io from "socket.io-client";
 
-const socket = io.connect(`${process.env.BASE_URL}`);
+const socket = io.connect(`${import.meta.env.URL}`);
 
 const App = () => {
- 
+  const [response, setResponse] = useState([]);
+  const [reRender, SetreRender] = useState(0);
   const recognitionRef = useRef(null);
   
+  useEffect(() => {
+    setResponse([]);
+  }, []);
 
   useEffect(() => {
     initializeRecognition();
   }, []);
 
+  useEffect(()=>{
+   console.log(response)
+  },[response])
 
   const initializeRecognition = () => {
     if (!("SpeechRecognition" in window || "webkitSpeechRecognition" in window)) {
       console.error("SpeechRecognition API not supported in this browser.");
-      alert("SpeechRecognition API not supported in this browser.")
       return;
     }
 
@@ -69,7 +75,7 @@ const App = () => {
   const handleFetch = async (command) => {
     console.log("Fetching command:", command);
     try {
-      const res = await fetch(`${process.env.BASE_URL}/run`, {
+      const res = await fetch(`${import.meta.env.URL}/run`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
