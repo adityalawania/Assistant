@@ -89,13 +89,30 @@ const App = () => {
     }
   };
 
+  const TryFetch = async () => {
+    console.log("en")
+    try {
+      let res = await fetch(`${import.meta.env.URL}/`, {
+        method:"GET",
+      });
+      
+      const data = await res.text();
+      console.log(data)
+      
+    
+     
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
   return (
     <div className="main">
       <p className="heading">Try Saying... "Hello Ruby" or "Play Karan Aujla"</p>
       <button className="btn1" onClick={startListening}>Start Listening</button>
       <button className="btn2" onClick={stopListening}>Stop Listening</button>
       <p className="heading2">Say "Stop it" to stop Ruby</p>
-
+      <button onClick={()=>TryFetch()}>Try</button>
       <Animation />
     </div>
   );

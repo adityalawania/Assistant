@@ -1,9 +1,8 @@
 const express = require('express')
 const app = express(); 
-const { spawn } = require('child_process'); // Import spawn from child_process
+const { spawn , execFile} = require('child_process'); // Import spawn from child_process
 const server = require('http').createServer(app);
 const cors = require('cors');
-
 const io = require('socket.io')(server, {
     cors: {
         origin: "*",
@@ -23,9 +22,27 @@ app.use(express.json())
 express.urlencoded({extended:false})
 
 app.get('/', (req, res) => {
-  
+    
     res.json({"Message":"Hello from Backend"});
 });
+
+app.get('/try',(req,res)=>{
+    console.log("done")
+    const pythonProcess = spawn('python', ['a.py', command]);
+    pythonProcess.stdout.on('data', (data) => {
+        console.log(`Python Output: ${data.toString()}`);
+        // io.emit('chat', data.toString());
+    });
+    
+    pythonProcess.stderr.on('data', (data) => {
+        console.error(`Python Error: ${data.toString()}`);
+    });
+    
+    pythonProcess.on('close', (code) => {
+        console.log(`Python process exited with code ${code}`);
+    });
+    res.json("Working fine")
+})
 
 
 app.post('/run', (req, res) => {
