@@ -28,19 +28,7 @@ app.get('/', (req, res) => {
 
 app.get('/try',(req,res)=>{
     console.log("done")
-    const pythonProcess = spawn('python', ['a.py', 'Dekho']);
-    pythonProcess.stdout.on('data', (data) => {
-        console.log(`Python Output: ${data.toString()}`);
-        // io.emit('chat', data.toString());
-    });
-    
-    pythonProcess.stderr.on('data', (data) => {
-        console.error(`Python Error: ${data.toString()}`);
-    });
-    
-    pythonProcess.on('close', (code) => {
-        console.log(`Python process exited with code ${code}`);
-    });
+   
     res.json("Working fine")
 })
 
