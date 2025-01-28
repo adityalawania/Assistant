@@ -9,6 +9,9 @@ const App = () => {
   const [response, setResponse] = useState([]);
   const [reRender, SetreRender] = useState(0);
   const recognitionRef = useRef(null);
+
+  const BASE_URL = import.meta.env.VITE_URL;
+
   
   useEffect(() => {
     setResponse([]);
@@ -75,7 +78,7 @@ const App = () => {
   const handleFetch = async (command) => {
     console.log("Fetching command:", command);
     try {
-      const res = await fetch(`${import.meta.env.URL}/run`, {
+      const res = await fetch(`${BASE_URL}/run`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -91,18 +94,16 @@ const App = () => {
 
   const TryFetch = async () => {
     console.log("en")
+    const url = `${BASE_URL}/try`;
     try {
-      let res = await fetch(`${import.meta.env.URL}/`, {
-        method:"GET",
-      });
-      
-      const data = await res.text();
-      console.log(data)
-      
-    
-     
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
+      }
+      const json = await response.json();
+      console.log(json);
     } catch (error) {
-      console.error("Error:", error);
+      console.error(error.message);
     }
   };
 
