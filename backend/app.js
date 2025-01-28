@@ -28,7 +28,7 @@ app.get('/', (req, res) => {
 
 app.get('/try',(req,res)=>{
     console.log("done")
-    const pythonProcess = spawn('python', ['a.py', command]);
+    const pythonProcess = spawn('python', ['a.py', 'Dekho']);
     pythonProcess.stdout.on('data', (data) => {
         console.log(`Python Output: ${data.toString()}`);
         // io.emit('chat', data.toString());
