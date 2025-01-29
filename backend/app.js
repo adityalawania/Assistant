@@ -61,13 +61,15 @@ app.get('/try', (req, res) => {
 app.post('/run', (req, res) => {
     const { command } = req.body; // Command from frontend
     const pythonProcess = spawn('python', ['assistant.py', command]);
-
+    let result = 'This is result';
     pythonProcess.stdout.on('data', (data) => {
+        result=data.toString();
         console.log(`Python Output: ${data.toString()}`);
         io.emit('chat', data.toString());
     });
 
     pythonProcess.stderr.on('data', (data) => {
+        result=data.toString();
         console.error(`Python Error: ${data.toString()}`);
     });
 
@@ -75,7 +77,7 @@ app.post('/run', (req, res) => {
         console.log(`Python process exited with code ${code}`);
     });
 
-    res.json({ message: 'Python script executed' });
+    res.json({ message: result });
 });
 
 // Start the server
