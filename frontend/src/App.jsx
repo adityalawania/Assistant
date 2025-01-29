@@ -3,17 +3,18 @@ import Animation from "./Components/Animation";
 import { React, useEffect, useRef, useState } from "react";
 import io from "socket.io-client";
 
-const socket = io.connect(`${import.meta.env.URL}`);
 
 const App = () => {
+  const BASE_URL = import.meta.env.VITE_URL;
+  const socket= io.connect(`${BASE_URL}`)
   const [response, setResponse] = useState([]);
   const [reRender, SetreRender] = useState(0);
   const recognitionRef = useRef(null);
-
-  const BASE_URL = import.meta.env.VITE_URL;
-
+  
+  
   
   useEffect(() => {
+  
     setResponse([]);
   }, []);
 
