@@ -93,20 +93,7 @@ const App = () => {
     }
   };
 
-  const TryFetch = async () => {
-    console.log("en")
-    const url = `${BASE_URL}/try`;
-    try {
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error(`Response status: ${response.status}`);
-      }
-      const json = await response.json();
-      console.log(json);
-    } catch (error) {
-      console.error(error.message);
-    }
-  };
+
 
   return (
     <div className="main">
@@ -114,7 +101,7 @@ const App = () => {
       <button className="btn1" onClick={startListening}>Start Listening</button>
       <button className="btn2" onClick={stopListening}>Stop Listening</button>
       <p className="heading2">Say "Stop it" to stop Ruby</p>
-      <button onClick={()=>TryFetch()}>Try</button>
+      
       <Animation />
     </div>
   );

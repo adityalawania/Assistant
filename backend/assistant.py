@@ -1,12 +1,13 @@
 from pywhatkit import playonyt
-import pywhatkit
 import speech_recognition as sr
 import pyttsx3
-import wikipedia
 import re
-import io
 import sys  # For fetching command-line arguments
+import google.generativeai as genai
 
+
+genai.configure(api_key="AIzaSyCO0P_vovUfua1hvBVJKw2_xybgv_yPNBg")
+model = genai.GenerativeModel("gemini-1.5-flash")
 
 # Initialize recognizer and speaker
 listener = sr.Recognizer()
@@ -65,8 +66,10 @@ def run_alexa(command):
         # Handle Wikipedia search
         try:
             print('searching on web... '+command)
-            response = wikipedia.summary(command, 1)
-       
+            # response = wikipedia.summary(command, 1)
+            response = model.generate_content(command)
+            response=response.text
+
         except:
             response = f"Sorry, I couldn't find anything for {command}."
         
