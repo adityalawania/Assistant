@@ -4,6 +4,13 @@ import pyttsx3
 import re
 import sys  # For fetching command-line arguments
 import google.generativeai as genai
+import subprocess
+# Install system dependencies if missing
+try:
+    import pyaudio
+except ImportError:
+    print("Installing missing dependencies...")
+    subprocess.run([sys.executable, "-m", "pip", "install", "pyaudio"], check=True)
 
 
 genai.configure(api_key="AIzaSyCO0P_vovUfua1hvBVJKw2_xybgv_yPNBg")
