@@ -15,12 +15,12 @@ const App = () => {
   const [btnText, setBtnText] = useState('Start');
 
   useEffect(() => {
-    // Load voices
-    window.speechSynthesis.onvoiceschanged = () => {
-      window.speechSynthesis.getVoices();
-    };
-  }, []);
-  
+  // Load voices
+  window.speechSynthesis.onvoiceschanged = () => {
+    window.speechSynthesis.getVoices();
+  };
+}, []);
+
 
   const recognitionRef = useRef(null);
 
@@ -48,25 +48,7 @@ const App = () => {
     window.speechSynthesis.speak(utterance);
   };
 
-  useEffect(() => {
-    socket.on("chat", (payload) => {
-      let str = `khotrdzpv + ${payload}`;
-      mySet.add(str);
-      SetreRender((prev) => prev + 1);
-      speakText(payload);
-      console.log("Incoming from socket:", payload);
-  
-      const ab = payload.split("\r\n");
-      if (ab[0] === 'Goodbye!') {
-        toggleListening(false);
-      }
-    });
-  
-    // Optional: Cleanup to avoid duplicate listeners if component ever unmounts
-    return () => {
-      socket.off("chat");
-    };
-  }, []);
+
 
   useEffect(() => {
     setResponse([]);
@@ -135,13 +117,6 @@ const App = () => {
     }
   };
 
-  socket.on("chat", (payload) => {
-    const ab = payload.split("\r\n");
-    if (ab[0] === 'Goodbye!') {
-      toggleListening(false);
-    }
-  });
-
   const handleFetch = async (command) => {
     console.log("Fetching command:", command);
     try {
@@ -152,8 +127,19 @@ const App = () => {
         },
         body: JSON.stringify({ command }),
       });
-      const data = await res.text();
-      console.log("Response:", data);
+      const payload = await res.text();
+    
+      let str = `khotrdzpv + ${payload}`;
+      mySet.add(str);
+      SetreRender((prev) => prev + 1);
+      speakText(payload);
+      console.log("Incoming from res:", payload);
+  
+      const ab = payload.split("\r\n");
+      if (ab[0] === 'Goodbye!') {
+        toggleListening(false);
+      }
+
     } catch (error) {
       console.error("Error:", error);
     }

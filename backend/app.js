@@ -27,10 +27,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 // Socket.io connection
-io.on("connection", (socket) => {
-    console.log("Socket is active !!");
+// io.on("connection", (socket) => {
+//     console.log("Socket is active !!");
 
-});
+// });
 
 // Routes
 app.get('/', (req, res) => {
@@ -40,23 +40,25 @@ app.get('/', (req, res) => {
 app.post('/run', (req, res) => {
     const { command } = req.body; // Command from frontend
     const pythonProcess = spawn('python', ['assistant.py', command]);
-    let result = 'This is result';
-    pythonProcess.stdout.on('data', (data) => {
+    let result = 'zozo ';
+    pythonProcess.stdout.on('data', async(data) => {
         result=data.toString();
         console.log(`Python Output: ${data.toString()}`);
-        io.emit('chat', data.toString());
+        // io.emit('chat', data.toString());
+        res.send(result)
     });
 
     pythonProcess.stderr.on('data', (data) => {
         result=data.toString();
         console.error(`Python Error: ${data.toString()}`);
+        
     });
 
     pythonProcess.on('close', (code) => {
         console.log(`Python process exited with code ${code}`);
+
     });
 
-    res.json({ message: result });
 });
 
 // Start the server
