@@ -25,14 +25,14 @@ speaker.setProperty('voice', voices[1].id)
 # Function for text-to-speech
 def talk(text):
     text = text.replace("*", "")
-    speaker.say(text)
-    speaker.runAndWait()
+    # speaker.say(text)
+    # speaker.runAndWait()
 
 # Function to handle the command
 def run_alexa(command):
     if command:  # Check if the command is not None
         command = command.lower()  # Convert to lowercase
-        # print(command)
+
         # Handle greetings
         if 'rubi' in command or 'ruby' in command:
             if any(greeting in command for greeting in ['hello', 'hi', 'hey', 'wake up','hy','hye','hii','hay','heya' ,'good morning','good evening','good night','good afternoon']):
@@ -64,8 +64,6 @@ def run_alexa(command):
 
         # Handle Wikipedia search
         try:
-            # print('searching on web... '+command)
-            # response = wikipedia.summary(command, 1)
             response = model.generate_content(command)
             response=response.text
             response=response.split(". ")
@@ -87,7 +85,9 @@ if __name__ == "__main__":
         command = " ".join(sys.argv[1:])  # Combine all command-line arguments
         output = run_alexa(command)
         print(output)  # Print the output for the backend to capture
+        sys.stdout.flush()
         sys.exit(0)  # Exit with success code
     else:
         print("No command provided.")
+        sys.stdout.flush()
         sys.exit(1)  # Exit with error code
