@@ -1,4 +1,4 @@
-from pywhatkit import playonyt
+from pywhatkit import playonyt,whats
 import speech_recognition as sr
 import pyttsx3
 import re
@@ -24,6 +24,7 @@ speaker.setProperty('voice', voices[1].id)
 
 # Function for text-to-speech
 def talk(text):
+    text = text.replace("*", "")
     speaker.say(text)
     speaker.runAndWait()
 
@@ -31,7 +32,7 @@ def talk(text):
 def run_alexa(command):
     if command:  # Check if the command is not None
         command = command.lower()  # Convert to lowercase
-        print(command)
+        # print(command)
         # Handle greetings
         if 'rubi' in command or 'ruby' in command:
             if any(greeting in command for greeting in ['hello', 'hi', 'hey', 'wake up','hy','hye','hii','hay','heya' ,'good morning','good evening','good night','good afternoon']):
@@ -60,22 +61,16 @@ def run_alexa(command):
             talk(response)
             return response
 
-        # Handle calculations
-        pattern = r'(\d+)\s*([+\-*/])\s*(\d+)'
-        match = re.search(pattern, command)
-        if match:
-            num1, operator, num2 = match.groups()
-            result = eval(match.group(0))
-            response = f"{num1} {operator} {num2} is {result}"
-            talk(response) 
-            return response
 
         # Handle Wikipedia search
         try:
-            print('searching on web... '+command)
+            # print('searching on web... '+command)
             # response = wikipedia.summary(command, 1)
             response = model.generate_content(command)
             response=response.text
+            response=response.split(". ")
+            response=". ".join(response[:2])
+           
 
         except:
             response = f"Sorry, I couldn't find anything for {command}."
