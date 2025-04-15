@@ -20,19 +20,24 @@ const App = () => {
   const speakText = (text) => {
     const utterance = new SpeechSynthesisUtterance(text);
     const voices = window.speechSynthesis.getVoices();
-
+  
+    // Pick a commonly high-quality female voice or fallback
     const femaleVoice = voices.find((voice) =>
-      ["female", "woman", "zira", "google uk english female"].some((key) =>
+      ["female", "woman", "zira", "google", "samantha", "lucy", "karen", "zoe", "eva"].some((key) =>
         voice.name.toLowerCase().includes(key)
       )
     );
-
+  
     if (femaleVoice) utterance.voice = femaleVoice;
-
-    utterance.pitch = 1;
-    utterance.rate = 1.6;
+  
+    // Voice tuning for more feminine/natural tone
+    utterance.pitch = 1.4; // Higher pitch = more feminine
+    utterance.rate = 1.1;  // Slower rate makes it sound less robotic
+    utterance.volume = 1;  // Full volume
+  
     window.speechSynthesis.speak(utterance);
   };
+  
 
   useEffect(() => {
     initializeRecognition();
@@ -122,7 +127,7 @@ const App = () => {
 
         toast.warning('If video is not played , Maybe your pop-ups are blocked !', {
           position: "top-right",
-          autoClose: 6000,
+          autoClose: 5000,
           hideProgressBar: false,
           closeOnClick: false,
           pauseOnHover: true,
