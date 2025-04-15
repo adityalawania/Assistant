@@ -1,93 +1,58 @@
-from pywhatkit import playonyt,whats
-import speech_recognition as sr
-import pyttsx3
-import re
-import sys  # For fetching command-line arguments
+import sys
 import google.generativeai as genai
-import subprocess
-# Install system dependencies if missing
-try:
-    import pyaudio
-except ImportError:
-    print("Installing missing dependencies...")
-    subprocess.run([sys.executable, "-m", "pip", "install", "pyaudio"], check=True)
+import os
+import warnings
+import webbrowser  # Import webbrowser module
 
+# Suppress gRPC log noise
+os.environ['GRPC_VERBOSITY'] = 'ERROR'
+warnings.filterwarnings("ignore")
 
-genai.configure(api_key="AIzaSyCO0P_vovUfua1hvBVJKw2_xybgv_yPNBg")
+# Configure Gemini
+genai.configure(api_key="AIzaSyCO0P_vovUfua1hvBVJKw2_xybgv_yPNBg")  # Replace with actual key or use env vars
+
 model = genai.GenerativeModel("gemini-1.5-flash")
 
-# Initialize recognizer and speaker
-listener = sr.Recognizer()
-speaker = pyttsx3.init()
-voices = speaker.getProperty('voices')
-speaker.setProperty('voice', voices[1].id)
+# Command processor
+def run_ruby(command):
+    if not command:
+        return "No command provided."
 
-# Function for text-to-speech
-def talk(text):
-    text = text.replace("*", "")
-    # speaker.say(text)
-    # speaker.runAndWait()
+    command = command.lower()
 
-# Function to handle the command
-def run_alexa(command):
-    if command:  # Check if the command is not None
-        command = command.lower()  # Convert to lowercase
+    if any(greet in command for greet in ['hello', 'hi', 'hey', 'good morning', 'good night']):
+        return "Hello! What can I do for you?"
 
-        # Handle greetings
-        if 'rubi' in command or 'ruby' in command:
-            if any(greeting in command for greeting in ['hello', 'hi', 'hey', 'wake up','hy','hye','hii','hay','heya' ,'good morning','good evening','good night','good afternoon']):
-                response = "Hello sir, what can I do for you?"
-                talk(response)
-                return response
-            else:
-                list=command.split(' ')
-                command=''
-                for i in list :
-                    if(i=='ruby' or i=='rubi'):
-                        anything='ok'
-                    else:
-                        command=command+i+' '
+    if 'stop' in command or 'exit' in command:
+        return "Goodbye!"
 
-        # Handle stop/exit
-        if 'stop' in command or 'exit' in command:
-            response = "Goodbye!"
-            talk(response)
-            return response
-
-        # Handle play on YouTube
-        if 'play' in command:
-            playonyt(command)
-            response = "Playing your request."
-            talk(response)
-            return response
-
-
-        # Handle Wikipedia search
-        try:
-            response = model.generate_content(command)
-            response=response.text
-            response=response.split(". ")
-            response=". ".join(response[:2])
-           
-
-        except:
-            response = f"Sorry, I couldn't find anything for {command}."
+    # Check if the command contains "play" and a YouTube URL
+    if 'play' in command:
+        # Search for the term after 'play' (Assuming user provides the full URL or just a query)
+        search_query = command.replace('play', '').strip()
+        youtube_url = f"https://www.youtube.com/results?search_query={search_query}"
         
-        talk(response)
+        # Open the URL in the default web browser
+        webbrowser.open(youtube_url)
+        return f"Playing {search_query} on YouTube."
+
+    try:
+        result = model.generate_content(command)
+        response = result.text
+        response = ". ".join(response.split(". ")[:2])  # Keep first 2 lines
         return response
+    except Exception as e:
+        return f"Error fetching response: {str(e)}"
 
-    talk("Sorry, I didn't understand that.")
-    return "Sorry, I didn't understand that."
-
-# Main script execution
+# Entry point
 if __name__ == "__main__":
     if len(sys.argv) > 1:
-        command = " ".join(sys.argv[1:])  # Combine all command-line arguments
-        output = run_alexa(command)
-        print(output)  # Print the output for the backend to capture
+        input_command = " ".join(sys.argv[1:])
+        output = run_ruby(input_command)
+        print(output)
         sys.stdout.flush()
-        sys.exit(0)  # Exit with success code
+        sys.exit(0)
     else:
         print("No command provided.")
         sys.stdout.flush()
-        sys.exit(1)  # Exit with error code
+        sys.exit(1)

@@ -1,13 +1,13 @@
 const express = require('express');
 const app = express();
 const { spawn } = require('child_process');
+const server = require('http').createServer(app);
 const cors = require('cors');
 
-// CORS configuration
 const allowedOrigins = [
   'https://assistant-pearl.vercel.app',
   'http://localhost:3000',
-  'http://localhost:5173'
+  'http://localhost:5173',
 ];
 
 app.use(cors({
@@ -19,48 +19,45 @@ app.use(cors({
     }
   },
   methods: ['GET', 'POST'],
-  allowedHeaders: ['Content-Type']
+  allowedHeaders: ['Content-Type'],
 }));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// Routes
 app.get('/', (req, res) => {
-  res.json({ message: "Hello from Backend" });
+  res.json({ message: 'Hello from Backend' });
 });
 
 app.post('/run', (req, res) => {
   const { command } = req.body;
+
   if (!command) {
-    return res.status(400).json({ error: 'Command is required' });
+    return res.status(400).json({ error: 'No command provided' });
   }
 
   const pythonProcess = spawn('python', ['assistant.py', command]);
 
-  let outputData = '';
-  let errorData = '';
+  let output = '';
+  let error = '';
 
   pythonProcess.stdout.on('data', (data) => {
-    outputData += data.toString();
+    output += data.toString();
   });
 
   pythonProcess.stderr.on('data', (data) => {
-    errorData += data.toString();
+    error += data.toString();
   });
 
   pythonProcess.on('close', (code) => {
-    if (errorData) {
-      console.error("Python stderr:", errorData);
-      return res.status(500).json({ error: errorData });
+    if (code === 0 && output) {
+      res.send(output.trim());
+    } else {
+      res.status(500).json({ error: error || 'An error occurred while processing the command.' });
     }
-    console.log("Python Output:", outputData);
-    res.send(outputData.trim());
   });
 });
 
-// Start server
-const PORT = process.env.PORT || 8000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+server.listen(8000, () => {
+  console.log("🚀 Server is running on port 8000");
 });

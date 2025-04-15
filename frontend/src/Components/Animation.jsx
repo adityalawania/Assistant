@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import '../App.css'
 import Circle from './Circle'
 import Swing from './Swing'
+import { memo } from 'react'
 
 function Animation(props) {
   
@@ -13,4 +14,4 @@ function Animation(props) {
   )
 }
 
-export default Animation
+export default memo(Animation)

@@ -1,12 +1,12 @@
 // App.jsx
 import "./App.css";
 import Animation from "./Components/Animation";
-import { React, useEffect, useRef, useState } from "react";
+import { memo, React, useEffect, useRef, useState } from "react";
 
 const App = () => {
   const [messages, setMessages] = useState([]);
   const BASE_URL = import.meta.env.VITE_URL;
-  const [flag, setFlag] = useState(false);
+  const flagRef = useRef(false);
   const [btnText, setBtnText] = useState("Start");
   const recognitionRef = useRef(null);
 
@@ -27,8 +27,8 @@ const App = () => {
 
     if (femaleVoice) utterance.voice = femaleVoice;
 
-    utterance.pitch = 1.2;
-    utterance.rate = 1.1;
+    utterance.pitch = 0.1;
+    utterance.rate = 1.6;
     window.speechSynthesis.speak(utterance);
   };
 
@@ -51,8 +51,8 @@ const App = () => {
     recognition.onstart = () => console.log("🎙️ Listening...");
     recognition.onresult = (event) => {
       const command = event.results[event.results.length - 1][0].transcript;
-      console.log("Command:", command);
       addMessage(command, "user");
+      console.log("Command:", command);
       handleFetch(command);
     };
 
@@ -63,8 +63,9 @@ const App = () => {
 
     recognition.onend = () => {
       console.log("🔇 Stopped listening.");
-      if (flag) recognition.start(); // Restart if still in listening mode
+      if (flagRef.current) recognition.start(); // Use ref instead of state
     };
+    
 
     recognitionRef.current = recognition;
   };
@@ -72,18 +73,19 @@ const App = () => {
   const toggleListening = (val) => {
     const recognition = recognitionRef.current;
     if (!recognition) return;
-
-    if (val === false || flag) {
+  
+    if (val === false || flagRef.current) {
       recognition.onend = null;
       recognition.stop();
       setBtnText("Start");
-      setFlag(false);
+      flagRef.current = false;
     } else {
       recognition.start();
       setBtnText("Stop");
-      setFlag(true);
+      flagRef.current = true;
     }
   };
+  
 
   const addMessage = (text, sender) => {
     setMessages((prev) => [...prev, { text, sender }]);
@@ -122,7 +124,7 @@ const App = () => {
           </div>
         ))}
       </div>
-
+      
       <p className="heading">
         Try Saying... "Hello Ruby" or "Play Karan Aujla" or ask about any xyz place, thing or personality!
       </p>
@@ -134,5 +136,6 @@ const App = () => {
     </div>
   );
 };
+
 
 export default App;
