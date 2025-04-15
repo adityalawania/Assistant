@@ -2,6 +2,7 @@
 import "./App.css";
 import Animation from "./Components/Animation";
 import { memo, React, useEffect, useRef, useState } from "react";
+import { ToastContainer, toast } from 'react-toastify';
 
 const App = () => {
   const [messages, setMessages] = useState([]);
@@ -12,6 +13,7 @@ const App = () => {
 
   useEffect(() => {
     window.speechSynthesis.getVoices(); // Pre-load voices
+   
   }, []);
 
   // 👇 Speak Text with female voice
@@ -27,7 +29,7 @@ const App = () => {
 
     if (femaleVoice) utterance.voice = femaleVoice;
 
-    utterance.pitch = 0.1;
+    utterance.pitch = 1;
     utterance.rate = 1.6;
     window.speechSynthesis.speak(utterance);
   };
@@ -85,6 +87,8 @@ const App = () => {
       flagRef.current = true;
     }
   };
+
+
   
 
   const addMessage = (text, sender) => {
@@ -99,30 +103,52 @@ const App = () => {
         body: JSON.stringify({ command }),
       });
   
-      const result = await res.text();
-      console.log("🤖 Response:", result);
+      const resultText = await res.text();
+      console.log("🤖 Raw Response:", resultText);
   
-      // Check if it's a video link
-      if (result.startsWith("OPEN_YOUTUBE::")) {
-        const videoUrl = result.replace("OPEN_YOUTUBE::", "").trim();
-        window.open(videoUrl, "_blank");
-        addMessage(`Playing video: `, "bot");
-      } else {
-        addMessage(result, "bot");
-        speakText(result);
+      let result = {};
+      try {
+        result = JSON.parse(resultText);
+      } catch {
+        result = { message: resultText }; // fallback
+      }
   
-        if (result.toLowerCase().includes("goodbye")) {
-          toggleListening(false);
-        }
+      const { message, video_url } = result;
+  
+      addMessage(message, "bot");
+      speakText(message);
+  
+      if (video_url) {
+
+        toast.warning('If video is not played , Maybe your pop-ups are blocked !', {
+          position: "top-right",
+          autoClose: 6000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+          });
+        
+        const autoplayUrl = video_url.replace("watch?v=", "embed/") + "?autoplay=1";
+        window.open(autoplayUrl, "_blank"); // Autoplay YouTube video
+       
+      }
+  
+      if (message.toLowerCase().includes("goodbye")) {
+        toggleListening(false);
       }
     } catch (err) {
       console.error("Error fetching response:", err);
     }
   };
   
+  
 
   return (
     <div className="main">
+      <ToastContainer />
       <div className="chat-container">
         {messages.map((msg, idx) => (
           <div
