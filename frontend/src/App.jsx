@@ -98,19 +98,28 @@ const App = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ command }),
       });
-
+  
       const result = await res.text();
       console.log("🤖 Response:", result);
-      addMessage(result, "bot");
-      speakText(result);
-
-      if (result.toLowerCase().includes("goodbye")) {
-        toggleListening(false);
+  
+      // Check if it's a video link
+      if (result.startsWith("OPEN_YOUTUBE::")) {
+        const videoUrl = result.replace("OPEN_YOUTUBE::", "").trim();
+        window.open(videoUrl, "_blank");
+        addMessage(`Playing video: `, "bot");
+      } else {
+        addMessage(result, "bot");
+        speakText(result);
+  
+        if (result.toLowerCase().includes("goodbye")) {
+          toggleListening(false);
+        }
       }
     } catch (err) {
       console.error("Error fetching response:", err);
     }
   };
+  
 
   return (
     <div className="main">
